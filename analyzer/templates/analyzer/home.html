@@ -1,0 +1,208 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %}ResumeAI Studio — Smart ATS Scoring & Optimization{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Hero Section -->
+  <section class="hero-section" aria-labelledby="hero-title">
+    <div class="pill-badge">
+      <span class="pulse-dot"></span>
+      <span>NEXT-GEN ATS EVALUATION ENGINE • 2026 EDITION</span>
+    </div>
+
+    <h1 class="hero-title" id="hero-title">
+      Supercharge Your Resume For <br>
+      <span class="gradient-text">Top-Tier Tech Careers</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Over 75% of resumes are rejected by automated Applicant Tracking Systems before a human recruiter even sees them. Detect critical missing keywords, verify layout compatibility, and get an instant ATS score.
+    </p>
+
+    <div class="hero-actions">
+      <a href="{% url 'analyzer:upload' %}" class="btn btn-primary btn-lg" id="home-upload-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 16 12 12 8 16"></polyline>
+          <line x1="12" y1="12" x2="12" y2="21"></line>
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+          <polyline points="16 16 12 12 8 16"></polyline>
+        </svg>
+        Analyze Your Resume Now
+      </a>
+
+      <a href="{% url 'analyzer:builder' %}" class="btn btn-secondary btn-lg" id="home-builder-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        Open Live Resume Builder
+      </a>
+    </div>
+
+    <!-- Quick Sample Demo Link -->
+    <div style="margin-top:-20px;margin-bottom:40px;">
+      <a href="{% url 'analyzer:upload' %}?demo=1" style="color:#818cf8;font-size:0.92rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+        <span>✨ Don't have a file ready? Click to test with a Demo Senior Engineer Resume</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </a>
+    </div>
+
+    <!-- Stats Ribbon -->
+    <div class="stats-ribbon">
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <div>
+          <div class="stat-value">100% Free</div>
+          <div class="stat-label">No sign-up or paywalls</div>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-icon" style="background:rgba(16,185,129,0.15);color:#34d399;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <div>
+          <div class="stat-value">&lt; 1.5s</div>
+          <div class="stat-label">Ultra-fast text parsing</div>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-icon" style="background:rgba(236,72,153,0.15);color:#f472b6;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        </div>
+        <div>
+          <div class="stat-value">PDF & DOCX</div>
+          <div class="stat-label">Standard format support</div>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-icon" style="background:rgba(6,182,212,0.15);color:#22d3ee;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div>
+          <div class="stat-value">Private & Secure</div>
+          <div class="stat-label">Memory-only processing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Features Showcase Grid -->
+  <section aria-labelledby="features-heading">
+    <div style="text-align:center;margin-bottom:20px;">
+      <h2 id="features-heading" style="font-size:2rem;font-weight:800;letter-spacing:-0.02em;">
+        Engineered for Modern <span class="gradient-text">Hiring Algorithms</span>
+      </h2>
+      <p style="color:var(--text-muted);font-size:1.05rem;max-width:600px;margin:10px auto 0;">
+        Everything you need to transform your resume into an interview-generating asset.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-box">
+        <div class="feature-icon-wrapper icon-purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <h3 class="feature-heading">Keyword Gap Scanner</h3>
+        <p class="feature-desc">
+          Automated cross-referencing against high-demand industry competencies (Python, AWS, React, Docker, SQL, APIs) to uncover missing keywords.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-box">
+        <div class="feature-icon-wrapper icon-emerald">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3 class="feature-heading">Algorithmic ATS Score</h3>
+        <p class="feature-desc">
+          Calculates a comprehensive 0–100 compatibility score evaluating layout clarity, section hierarchy, contact completeness, and keyword density.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-box">
+        <div class="feature-icon-wrapper icon-cyan">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </div>
+        <h3 class="feature-heading">Actionable Optimization Tips</h3>
+        <p class="feature-desc">
+          Prioritized advice for rewriting bullet points using quantifiable metrics, power verbs, and standard headings recruiters look for.
+        </p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-box">
+        <div class="feature-icon-wrapper icon-pink">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+        </div>
+        <h3 class="feature-heading">Live Resume Builder</h3>
+        <p class="feature-desc">
+          In-browser dual-pane resume workshop with live rendering, pre-filled sample templates, and clean 1-click print-to-PDF export.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section style="margin:80px 0;" aria-labelledby="how-it-works-heading">
+    <div class="glass-card" style="padding:48px 36px;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <span class="pill-badge" style="margin-bottom:12px;">3 SIMPLE STEPS</span>
+        <h2 id="how-it-works-heading" style="font-size:2rem;font-weight:800;">How The Analyzer Works</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:28px;">
+        <div style="display:flex;gap:18px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">1</div>
+          <div>
+            <h4 style="font-size:1.15rem;font-weight:700;margin-bottom:6px;color:#fff;">Upload Your File</h4>
+            <p style="color:var(--text-muted);font-size:0.92rem;">Drag and drop your PDF or DOCX file into the secure dropzone.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:18px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
+          <div>
+            <h4 style="font-size:1.15rem;font-weight:700;margin-bottom:6px;color:#fff;">Deep Extraction</h4>
+            <p style="color:var(--text-muted);font-size:0.92rem;">Our parser breaks down text, sections, dates, and technical keywords.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:18px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">3</div>
+          <div>
+            <h4 style="font-size:1.15rem;font-weight:700;margin-bottom:6px;color:#fff;">Review & Optimize</h4>
+            <p style="color:var(--text-muted);font-size:0.92rem;">Receive your ATS score, detected keywords, and recommendations.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:40px;">
+        <a href="{% url 'analyzer:upload' %}" class="btn btn-primary btn-lg" id="how-cta-btn">
+          Get Started Now — It's Free
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

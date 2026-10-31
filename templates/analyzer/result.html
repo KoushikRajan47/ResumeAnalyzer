@@ -1,0 +1,66 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %}Resume Analysis Results — ResumeAI Studio{% endblock %}
+
+{% block content %}
+<div class="container upload-wrapper" style="margin-top:40px;">
+  <div class="glass-card result-header-card">
+    <div class="gauge-wrapper">
+      <svg class="gauge-svg" viewBox="0 0 180 180">
+        <circle class="gauge-bg" cx="90" cy="90" r="75"></circle>
+        <circle 
+          class="gauge-progress" 
+          cx="90" cy="90" r="75"
+          stroke="{% if score >= 80 %}#10b981{% elif score >= 60 %}#f59e0b{% else %}#ef4444{% endif %}"
+          stroke-dasharray="471.24"
+          stroke-dashoffset="{{ gauge_offset|default:'100' }}"
+        ></circle>
+      </svg>
+      <div class="gauge-score-inner">
+        <div class="gauge-number" style="color:{% if score >= 80 %}#34d399{% elif score >= 60 %}#fbbf24{% else %}#f87171{% endif %};">
+          {{ score }}
+        </div>
+        <div class="gauge-total">OUT OF 100</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="verdict-badge {% if ats_friendly %}badge-excellent{% else %}badge-warning{% endif %}">
+        {% if ats_friendly %}ATS Ready{% else %}Needs Optimization{% endif %}
+      </div>
+
+      {% if resume.name %}
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;">
+        Candidate: <strong style="color:#fff;">{{ resume.name }}</strong>
+      </div>
+      {% endif %}
+
+      <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:12px;color:#fff;">
+        Analysis Evaluation
+      </h2>
+
+      <div style="background:var(--surface-alt);padding:16px;border-radius:var(--radius-md);margin-bottom:16px;">
+        <pre style="white-space:pre-wrap;font-family:var(--font-main);color:var(--text-main);font-size:0.95rem;line-height:1.5;">{{ feedback }}</pre>
+      </div>
+
+      <div style="display:flex;gap:12px;">
+        <a href="{% url 'analyzer:upload' %}" class="btn btn-primary btn-sm">
+          Analyze Another Resume
+        </a>
+        <a href="{% url 'analyzer:builder' %}" class="btn btn-secondary btn-sm">
+          Go To Resume Builder
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if resume.extracted_text %}
+  <div class="glass-card" style="margin-top:24px;">
+    <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:12px;color:#fff;">
+      Extracted Text Preview
+    </h3>
+    <pre style="background:rgba(0,0,0,0.4);border:1px solid var(--card-border);padding:16px;border-radius:var(--radius-sm);color:#cbd5e1;font-family:var(--font-mono);font-size:0.85rem;line-height:1.5;max-height:260px;overflow-y:auto;white-space:pre-wrap;">{{ resume.extracted_text }}</pre>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

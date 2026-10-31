@@ -1,0 +1,398 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %}Live ATS Resume Builder — ResumeAI Studio{% endblock %}
+{% block meta_description %}Build an ATS-optimized professional resume with real-time preview, pre-loaded templates, and 1-click PDF export.{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1320px;">
+  <!-- Page Header -->
+  <div style="text-align:center;margin-bottom:30px;">
+    <div class="pill-badge">
+      <span class="pulse-dot"></span>
+      <span>REAL-TIME DUAL-PANE RESUME STUDIO</span>
+    </div>
+    <h1 style="font-size:2.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;">
+      ATS-Compliant Live <span class="gradient-text">Resume Builder</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:1.02rem;max-width:650px;margin:0 auto;">
+      Create an impeccably structured resume tailored for algorithmic ATS scanners. Edit fields on the left and watch your document render live on the right.
+    </p>
+  </div>
+
+  <!-- Builder Workspace Grid -->
+  <div class="builder-layout">
+    <!-- LEFT: FORM CONTROLS -->
+    <div class="glass-card builder-controls-panel" id="builder-editor">
+      <!-- Toolbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--card-border);">
+        <h2 style="font-size:1.25rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Resume Content Editor
+        </h2>
+
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-load-sample" onclick="loadSampleResume()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Pre-fill Demo Data
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="clearFields()" style="color:#f87171;">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: Personal Contact Info -->
+      <fieldset style="border:none;margin-bottom:28px;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+          1. Identity & Contact Details
+        </legend>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label class="form-label" for="inp-name">Full Name</label>
+            <input type="text" class="form-input" id="inp-name" value="Alex Mercer" placeholder="e.g. Alex Mercer" oninput="updateResume()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-title">Target Job Title</label>
+            <input type="text" class="form-input" id="inp-title" value="Senior Software Engineer" placeholder="e.g. Senior Software Engineer" oninput="updateResume()">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label class="form-label" for="inp-email">Professional Email</label>
+            <input type="email" class="form-input" id="inp-email" value="alex.mercer@example.com" placeholder="alex@domain.com" oninput="updateResume()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-phone">Phone Number</label>
+            <input type="text" class="form-input" id="inp-phone" value="+1 (555) 234-5678" placeholder="+1 (555) 000-0000" oninput="updateResume()">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label class="form-label" for="inp-location">Location</label>
+            <input type="text" class="form-input" id="inp-location" value="San Francisco, CA" placeholder="City, State / Country" oninput="updateResume()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-linkedin">LinkedIn / Portfolio</label>
+            <input type="text" class="form-input" id="inp-linkedin" value="linkedin.com/in/alex-mercer" placeholder="linkedin.com/in/username" oninput="updateResume()">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 2: Professional Summary -->
+      <fieldset style="border:none;margin-bottom:28px;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;">
+          2. Professional Summary
+        </legend>
+        <div class="form-group">
+          <textarea class="form-textarea" id="inp-summary" rows="4" placeholder="Brief 2-3 sentence overview highlighting your core expertise and quantifiable impact..." oninput="updateResume()">Results-driven Senior Software Engineer with 6+ years of experience engineering high-throughput web architectures, cloud-native services, and scalable APIs using Python, Django, React, and AWS. Proven success boosting platform efficiency and driving 99.99% system reliability.</textarea>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 3: Technical Skills -->
+      <fieldset style="border:none;margin-bottom:28px;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;">
+          3. Core Skills & Keywords (Comma separated)
+        </legend>
+        <div class="form-group">
+          <textarea class="form-textarea" id="inp-skills" rows="3" placeholder="Python, Django, React, PostgreSQL, Docker, AWS, Git, CI/CD, REST APIs, Microservices" oninput="updateResume()">Python, Django, FastAPI, React, TypeScript, PostgreSQL, Redis, Docker, Kubernetes, AWS (EC2, S3, RDS), Git, CI/CD, RESTful APIs, Agile/Scrum</textarea>
+          <small style="color:var(--text-dim);font-size:0.8rem;margin-top:4px;display:block;">
+            Tip: Include exact keyword matches for technologies mentioned in your target job descriptions.
+          </small>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 4: Work Experience -->
+      <fieldset style="border:none;margin-bottom:28px;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;">
+          4. Professional Experience
+        </legend>
+
+        <!-- Role 1 -->
+        <div style="background:var(--surface-alt);padding:16px;border-radius:var(--radius-sm);margin-bottom:14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+            <input type="text" class="form-input" id="inp-job1-title" value="Senior Software Engineer" placeholder="Job Title" oninput="updateResume()">
+            <input type="text" class="form-input" id="inp-job1-company" value="CloudPeak Systems" placeholder="Company Name" oninput="updateResume()">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+            <input type="text" class="form-input" id="inp-job1-dates" value="2021 – Present" placeholder="Date Range (e.g. 2021 - Present)" oninput="updateResume()">
+            <input type="text" class="form-input" id="inp-job1-loc" value="San Francisco, CA" placeholder="Location" oninput="updateResume()">
+          </div>
+          <textarea class="form-textarea" id="inp-job1-bullets" rows="3" placeholder="One accomplishment per line..." oninput="updateResume()">- Architected Django REST microservices serving 2.5M daily active users with 99.99% uptime.
+- Led container migration to AWS ECS, reducing monthly cloud infrastructure spend by 28%.
+- Optimized database indexing and implemented Redis caching, reducing query latency by 55%.</textarea>
+        </div>
+
+        <!-- Role 2 -->
+        <div style="background:var(--surface-alt);padding:16px;border-radius:var(--radius-sm);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+            <input type="text" class="form-input" id="inp-job2-title" value="Full-Stack Developer" placeholder="Job Title" oninput="updateResume()">
+            <input type="text" class="form-input" id="inp-job2-company" value="Apex Digital Solutions" placeholder="Company Name" oninput="updateResume()">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+            <input type="text" class="form-input" id="inp-job2-dates" value="2018 – 2021" placeholder="Date Range" oninput="updateResume()">
+            <input type="text" class="form-input" id="inp-job2-loc" value="Austin, TX" placeholder="Location" oninput="updateResume()">
+          </div>
+          <textarea class="form-textarea" id="inp-job2-bullets" rows="3" placeholder="One accomplishment per line..." oninput="updateResume()">- Developed interactive customer-facing web dashboards using React and Django.
+- Automated GitHub Actions CI/CD workflows, cutting deployment defect rates by 40%.
+- Integrated Stripe & PayPal payment gateways securely handling $10M+ in volume.</textarea>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 5: Education -->
+      <fieldset style="border:none;margin-bottom:28px;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;">
+          5. Education
+        </legend>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+          <input type="text" class="form-input" id="inp-edu-degree" value="B.S. in Computer Science" placeholder="Degree / Major" oninput="updateResume()">
+          <input type="text" class="form-input" id="inp-edu-school" value="University of California, Berkeley" placeholder="Institution Name" oninput="updateResume()">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <input type="text" class="form-input" id="inp-edu-year" value="2014 – 2018" placeholder="Graduation Year" oninput="updateResume()">
+          <input type="text" class="form-input" id="inp-edu-details" value="Dean's Honors List, GPA: 3.8/4.0" placeholder="Honors / Additional Details" oninput="updateResume()">
+        </div>
+      </fieldset>
+
+      <!-- SECTION 6: Key Projects -->
+      <fieldset style="border:none;">
+        <legend style="font-size:0.95rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;">
+          6. Featured Projects
+        </legend>
+        <div class="form-group">
+          <input type="text" class="form-input" id="inp-proj-name" value="CloudFlow Task Engine — Open Source" placeholder="Project Name" style="margin-bottom:8px;" oninput="updateResume()">
+          <textarea class="form-textarea" id="inp-proj-desc" rows="2" placeholder="Project summary and impact..." oninput="updateResume()">Distributed asynchronous worker system engineered with Python, Redis, and WebSockets. Achieved 1.4k GitHub stars and 20,000+ monthly pip downloads.</textarea>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- RIGHT: LIVE RESUME PREVIEW & EXPORT -->
+    <div>
+      <!-- Actions Bar -->
+      <div class="builder-actions-bar" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="pulse-dot"></span>
+          <span style="font-size:0.85rem;color:var(--text-muted);font-weight:600;">Live Recruiter Preview</span>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="copyResumeText()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Text
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print / Export to PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- The Resume Paper Document -->
+      <div class="resume-preview-sheet" id="resume-sheet">
+        <!-- Header -->
+        <header class="res-header">
+          <h1 class="res-name" id="res-name-out">Alex Mercer</h1>
+          <div class="res-title" id="res-title-out">Senior Software Engineer</div>
+          <div class="res-contacts">
+            <span id="res-email-out">alex.mercer@example.com</span>
+            <span>•</span>
+            <span id="res-phone-out">+1 (555) 234-5678</span>
+            <span>•</span>
+            <span id="res-loc-out">San Francisco, CA</span>
+            <span>•</span>
+            <span id="res-link-out">linkedin.com/in/alex-mercer</span>
+          </div>
+        </header>
+
+        <!-- Summary -->
+        <section>
+          <h2 class="res-section-title">Professional Summary</h2>
+          <p class="res-body-text" id="res-summary-out">
+            Results-driven Senior Software Engineer with 6+ years of experience engineering high-throughput web architectures, cloud-native services, and scalable APIs using Python, Django, React, and AWS. Proven success boosting platform efficiency and driving 99.99% system reliability.
+          </p>
+        </section>
+
+        <!-- Technical Skills -->
+        <section>
+          <h2 class="res-section-title">Core Competencies & Technologies</h2>
+          <div class="res-skills-list" id="res-skills-out"></div>
+        </section>
+
+        <!-- Professional Experience -->
+        <section>
+          <h2 class="res-section-title">Work Experience</h2>
+
+          <!-- Role 1 -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <strong style="color:#0f172a;font-size:14px;" id="res-job1-title-out">Senior Software Engineer</strong>
+              <span style="font-size:12px;color:#64748b;font-weight:600;" id="res-job1-dates-out">2021 – Present</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#475569;margin-bottom:4px;">
+              <span id="res-job1-comp-out" style="font-weight:600;">CloudPeak Systems</span>
+              <span id="res-job1-loc-out">San Francisco, CA</span>
+            </div>
+            <ul style="padding-left:18px;color:#334155;margin:0;" id="res-job1-bullets-out"></ul>
+          </div>
+
+          <!-- Role 2 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <strong style="color:#0f172a;font-size:14px;" id="res-job2-title-out">Full-Stack Developer</strong>
+              <span style="font-size:12px;color:#64748b;font-weight:600;" id="res-job2-dates-out">2018 – 2021</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#475569;margin-bottom:4px;">
+              <span id="res-job2-comp-out" style="font-weight:600;">Apex Digital Solutions</span>
+              <span id="res-job2-loc-out">Austin, TX</span>
+            </div>
+            <ul style="padding-left:18px;color:#334155;margin:0;" id="res-job2-bullets-out"></ul>
+          </div>
+        </section>
+
+        <!-- Education -->
+        <section>
+          <h2 class="res-section-title">Education</h2>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <strong style="color:#0f172a;font-size:13.5px;" id="res-edu-degree-out">B.S. in Computer Science</strong>
+            <span style="font-size:12px;color:#64748b;font-weight:600;" id="res-edu-year-out">2014 – 2018</span>
+          </div>
+          <div style="font-size:12.5px;color:#475569;">
+            <span id="res-edu-school-out" style="font-weight:600;">University of California, Berkeley</span> — 
+            <span id="res-edu-details-out">Dean's Honors List, GPA: 3.8/4.0</span>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section>
+          <h2 class="res-section-title">Key Projects & Open Source</h2>
+          <div style="font-size:13px;font-weight:700;color:#0f172a;" id="res-proj-name-out">
+            CloudFlow Task Engine — Open Source
+          </div>
+          <p style="color:#334155;margin:2px 0 0;" id="res-proj-desc-out">
+            Distributed asynchronous worker system engineered with Python, Redis, and WebSockets. Achieved 1.4k GitHub stars and 20,000+ monthly pip downloads.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function updateResume() {
+    // Header details
+    document.getElementById('res-name-out').textContent = document.getElementById('inp-name').value || 'Your Name';
+    document.getElementById('res-title-out').textContent = document.getElementById('inp-title').value || 'Target Role Title';
+    document.getElementById('res-email-out').textContent = document.getElementById('inp-email').value || 'email@example.com';
+    document.getElementById('res-phone-out').textContent = document.getElementById('inp-phone').value || '+1 (000) 000-0000';
+    document.getElementById('res-loc-out').textContent = document.getElementById('inp-location').value || 'City, Country';
+    document.getElementById('res-link-out').textContent = document.getElementById('inp-linkedin').value || 'portfolio-link.com';
+
+    // Summary
+    document.getElementById('res-summary-out').textContent = document.getElementById('inp-summary').value || 'Professional summary...';
+
+    // Skills tags
+    const skillsRaw = document.getElementById('inp-skills').value || '';
+    const skillsContainer = document.getElementById('res-skills-out');
+    skillsContainer.innerHTML = '';
+    skillsRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(skill => {
+      const tag = document.createElement('span');
+      tag.className = 'res-skill-tag';
+      tag.textContent = skill;
+      skillsContainer.appendChild(tag);
+    });
+
+    // Experience 1
+    document.getElementById('res-job1-title-out').textContent = document.getElementById('inp-job1-title').value || 'Job Title';
+    document.getElementById('res-job1-comp-out').textContent = document.getElementById('inp-job1-company').value || 'Company';
+    document.getElementById('res-job1-dates-out').textContent = document.getElementById('inp-job1-dates').value || 'Dates';
+    document.getElementById('res-job1-loc-out').textContent = document.getElementById('inp-job1-loc').value || 'Location';
+    renderBullets('inp-job1-bullets', 'res-job1-bullets-out');
+
+    // Experience 2
+    document.getElementById('res-job2-title-out').textContent = document.getElementById('inp-job2-title').value || 'Job Title';
+    document.getElementById('res-job2-comp-out').textContent = document.getElementById('inp-job2-company').value || 'Company';
+    document.getElementById('res-job2-dates-out').textContent = document.getElementById('inp-job2-dates').value || 'Dates';
+    document.getElementById('res-job2-loc-out').textContent = document.getElementById('inp-job2-loc').value || 'Location';
+    renderBullets('inp-job2-bullets', 'res-job2-bullets-out');
+
+    // Education
+    document.getElementById('res-edu-degree-out').textContent = document.getElementById('inp-edu-degree').value || 'Degree';
+    document.getElementById('res-edu-school-out').textContent = document.getElementById('inp-edu-school').value || 'School';
+    document.getElementById('res-edu-year-out').textContent = document.getElementById('inp-edu-year').value || 'Year';
+    document.getElementById('res-edu-details-out').textContent = document.getElementById('inp-edu-details').value || '';
+
+    // Projects
+    document.getElementById('res-proj-name-out').textContent = document.getElementById('inp-proj-name').value || 'Project Title';
+    document.getElementById('res-proj-desc-out').textContent = document.getElementById('inp-proj-desc').value || 'Project description...';
+  }
+
+  function renderBullets(textareaId, ulId) {
+    const raw = document.getElementById(textareaId).value || '';
+    const ul = document.getElementById(ulId);
+    ul.innerHTML = '';
+    raw.split('\n').map(l => l.replace(/^[-•*]\s*/, '').trim()).filter(Boolean).forEach(line => {
+      const li = document.createElement('li');
+      li.style.marginBottom = '3px';
+      li.textContent = line;
+      ul.appendChild(li);
+    });
+  }
+
+  function loadSampleResume() {
+    document.getElementById('inp-name').value = 'Alex Mercer';
+    document.getElementById('inp-title').value = 'Senior Software Engineer | Full-Stack & Cloud';
+    document.getElementById('inp-email').value = 'alex.mercer@example.com';
+    document.getElementById('inp-phone').value = '+1 (555) 234-5678';
+    document.getElementById('inp-location').value = 'San Francisco, CA';
+    document.getElementById('inp-linkedin').value = 'linkedin.com/in/alex-mercer';
+    document.getElementById('inp-summary').value = 'Senior Software Engineer with 6+ years specializing in high-throughput Python, Django, React, and AWS microservices. Proven success reducing cloud costs by 28% and scaling platforms to 2.5M daily active users with 99.99% uptime.';
+    document.getElementById('inp-skills').value = 'Python, Django, FastAPI, React, TypeScript, PostgreSQL, Redis, Docker, Kubernetes, AWS (EC2, S3, RDS), Git, CI/CD, REST APIs, System Design';
+    document.getElementById('inp-job1-title').value = 'Senior Software Engineer';
+    document.getElementById('inp-job1-company').value = 'CloudPeak Systems';
+    document.getElementById('inp-job1-dates').value = '2021 – Present';
+    document.getElementById('inp-job1-loc').value = 'San Francisco, CA';
+    document.getElementById('inp-job1-bullets').value = '- Architected Django REST microservices serving 2.5M daily active users with 99.99% uptime.\n- Led container migration to AWS ECS, reducing monthly cloud infrastructure spend by 28%.\n- Optimized database indexing and implemented Redis caching, reducing query latency by 55%.';
+    document.getElementById('inp-job2-title').value = 'Full-Stack Developer';
+    document.getElementById('inp-job2-company').value = 'Apex Digital Solutions';
+    document.getElementById('inp-job2-dates').value = '2018 – 2021';
+    document.getElementById('inp-job2-loc').value = 'Austin, TX';
+    document.getElementById('inp-job2-bullets').value = '- Developed interactive customer-facing web dashboards using React and Django.\n- Automated GitHub Actions CI/CD workflows, cutting deployment defect rates by 40%.\n- Integrated Stripe & PayPal payment gateways securely handling $10M+ in volume.';
+    document.getElementById('inp-edu-degree').value = 'B.S. in Computer Science';
+    document.getElementById('inp-edu-school').value = 'University of California, Berkeley';
+    document.getElementById('inp-edu-year').value = '2014 – 2018';
+    document.getElementById('inp-edu-details').value = "Dean's Honors List, GPA: 3.8/4.0";
+    document.getElementById('inp-proj-name').value = 'CloudFlow Task Engine — Open Source';
+    document.getElementById('inp-proj-desc').value = 'Distributed asynchronous worker system engineered with Python, Redis, and WebSockets. Achieved 1.4k GitHub stars and 20,000+ monthly pip downloads.';
+    updateResume();
+    showToast('Loaded demo Senior Engineer resume!');
+  }
+
+  function clearFields() {
+    ['inp-name','inp-title','inp-email','inp-phone','inp-location','inp-linkedin','inp-summary','inp-skills','inp-job1-title','inp-job1-company','inp-job1-dates','inp-job1-loc','inp-job1-bullets','inp-job2-title','inp-job2-company','inp-job2-dates','inp-job2-loc','inp-job2-bullets','inp-edu-degree','inp-edu-school','inp-edu-year','inp-edu-details','inp-proj-name','inp-proj-desc'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    updateResume();
+    showToast('Fields cleared.');
+  }
+
+  function copyResumeText() {
+    const sheet = document.getElementById('resume-sheet');
+    if (sheet) {
+      navigator.clipboard.writeText(sheet.innerText).then(() => {
+        showToast('Resume plain text copied to clipboard!');
+      });
+    }
+  }
+
+  // Initialize live preview on load
+  document.addEventListener('DOMContentLoaded', updateResume);
+</script>
+{% endblock %}
